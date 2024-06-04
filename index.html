@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <link rel="stylesheet" href="./css/main.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Title</h1>
+    <div class="full-map">
+      <div class="checkbox-map">
+        <div class="checkbox">
+          <input
+            type="checkbox"
+            name="day-or-time"
+            value="day"
+            onclick="getCheckboxValue(event)"
+          />요일
+          <input
+            type="checkbox"
+            name="day-or-time"
+            value="time"
+            onclick="getCheckboxValue(event)"
+          />날짜
+        </div>
+        <div id="map">
+          <img
+            src="./data/sinchon_map.png"
+            style="width: 720px; height: 620px"
+          />
+        </div>
+      </div>
+      <div class="detail-graph">
+        <div id="pop-graph">유동인구 그래프</div>
+        <div id="rev-graph">매출 그래프</div>
+      </div>
+    </div>
+    <script src="./page/main.js"></script>
+  </body>
+</html>
