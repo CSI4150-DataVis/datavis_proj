@@ -40,3 +40,9 @@
   height: 360px;
   border: 1px solid blue;
 }
+
+.line {
+  fill: none;
+  stroke: blue;
+  stroke-width: 4px;
+}
