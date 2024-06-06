@@ -9,25 +9,26 @@
     />
     <link rel="stylesheet" href="./css/main.css?v=1.1" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="./page/main.js?v=2.0"></script>
     <title>Document</title>
   </head>
   <body>
-    <h1>Title</h1>
+    <h1>상권 및 유동인구 시각화</h1>
     <div class="full-map">
       <div class="checkbox-map">
         <div class="checkbox">
           <input
             type="checkbox"
-            name="day-or-time"
-            value="day"
+            name="pop-or-rev"
+            value="pop"
             onclick="getCheckboxValue(event)"
-          />요일
+          />유동인구
           <input
             type="checkbox"
-            name="day-or-time"
-            value="time"
-            onclick="getCheckboxValue(event)"
-          />날짜
+            name="pop-or-rev"
+            value="rev"
+            onclick="getCheckboxValue(event)""
+          />매출
         </div>
         <div id="map">
           <img
@@ -37,8 +38,8 @@
         </div>
       </div>
       <div class="detail-graph">
-        <div id="pop-graph">유동인구 그래프</div>
-        <div id="rev-graph">매출 그래프</div>
+        <div id="time-graph">시간 그래프</div>
+        <div id="day-graph">요일 그래프</div>
       </div>
     </div>
     <script src="./page/main.js?v=2.0"></script>
