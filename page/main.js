@@ -11,35 +11,70 @@ function getCheckboxValue(event) {
   const isChecked = event.target.checked;
   const value = event.target.value;
 
-  // If the checkbox is checked
   if (isChecked) {
-      if (value === "pop") { // If the checkbox value is "pop"
-          if (checker === "rev") { // If "rev" was previously checked
-              checker = "both"; // Set checker to "both"
-          } else {
-              checker = "pop"; // Otherwise, set checker to "pop"
-          }
-      } else if (value === "rev") { // If the checkbox value is "rev"
-          if (checker === "pop") { // If "pop" was previously checked
-              checker = "both"; // Set checker to "both"
-          } else {
-              checker = "rev"; // Otherwise, set checker to "rev"
-          }
+    if (value === "pop") {
+      if (checker === "rev") {
+        checker = "both";
+      } else if (checker === "sankey") {
+        checker = "pop_sankey";
+      } else if (checker === "rev_sankey") {
+        checker = "all";
+      } else {
+        checker = "pop";
       }
-  } else { // If the checkbox is unchecked
-      if (value === "pop") { // If the checkbox value is "pop"
-          if (checker === "both") { // If "both" was previously set
-              checker = "rev"; // Set checker to "rev"
-          } else {
-              checker = null; // Otherwise, set checker to null
-          }
-      } else if (value === "rev") { // If the checkbox value is "rev"
-          if (checker === "both") { // If "both" was previously set
-              checker = "pop"; // Set checker to "pop"
-          } else {
-              checker = null; // Otherwise, set checker to null
-          }
+    } else if (value === "rev") {
+      if (checker === "pop") {
+        checker = "both";
+      } else if (checker === "sankey") {
+        checker = "rev_sankey";
+      } else if (checker === "pop_sankey") {
+        checker = "all";
+      } else {
+        checker = "rev";
       }
+    } else if (value === "sankey") {
+      if (checker === "pop") {
+        checker = "pop_sankey";
+      } else if (checker === "rev") {
+        checker = "rev_sankey";
+      } else if (checker === "both") {
+        checker = "all";
+      } else {
+        checker = "sankey";
+      }
+    }
+  } else {
+    if (value === "pop") {
+      if (checker === "both") {
+        checker = "rev";
+      } else if (checker === "pop_sankey") {
+        checker = "sankey";
+      } else if (checker === "all") {
+        checker = "rev_sankey";
+      } else {
+        checker = null;
+      }
+    } else if (value === "rev") {
+      if (checker === "both") {
+        checker = "pop";
+      } else if (checker === "rev_sankey") {
+        checker = "sankey";
+      } else if (checker === "all") {
+        checker = "pop_sankey";
+      } else {
+        checker = null;
+      }
+    } else if (value === "sankey") {
+      if (checker === "pop_sankey") {
+        checker = "pop";
+      } else if (checker === "rev_sankey") {
+        checker = "rev";
+      } else if (checker === "all") {
+        checker = "both";
+      } else {
+        checker = null;
+      }
+    }
   }
 
   // Call the visualization function with the updated marker and checker values
@@ -541,20 +576,215 @@ function day_bothVis(marker, checker) {
   });
 }
 
+// sankey chart
+function sankeyVis(marker, checker) {
+  // weight (pop - rev)
+  weight = 0.004
+  // Extract the data from csv files
+  Promise.all([
+    d3.csv("./data/population_filtered.csv"),
+    d3.csv("./data/revenue_filtered.csv")
+  ]).then(function([popData, revData]) {
+    const pop_time_data = [
+      { time: "00~06", value: parseInt(popData[0]["시간대_00_06_유동인구_수"])},
+      { time: "06~11", value: parseInt(popData[0]["시간대_06_11_유동인구_수"])},
+      { time: "11~14", value: parseInt(popData[0]["시간대_11_14_유동인구_수"])},
+      { time: "14~17", value: parseInt(popData[0]["시간대_14_17_유동인구_수"])},
+      { time: "17~21", value: parseInt(popData[0]["시간대_17_21_유동인구_수"])},
+      { time: "21~24", value: parseInt(popData[0]["시간대_21_24_유동인구_수"])}
+    ];
+
+    const rev_time_data = [
+      { time: "00~06", value: parseInt(revData[0]["시간대_00~06_매출_금액"]) * weight},
+      { time: "06~11", value: parseInt(revData[0]["시간대_06~11_매출_금액"]) * weight},
+      { time: "11~14", value: parseInt(revData[0]["시간대_11~14_매출_금액"]) * weight},
+      { time: "14~17", value: parseInt(revData[0]["시간대_14~17_매출_금액"]) * weight},
+      { time: "17~21", value: parseInt(revData[0]["시간대_17~21_매출_금액"]) * weight},
+      { time: "21~24", value: parseInt(revData[0]["시간대_21~24_매출_금액"]) * weight}
+    ];
+
+    const pop_day_data = [
+      { day: "월", value: parseInt(popData[0]["월요일_유동인구_수"]) },
+      { day: "화", value: parseInt(popData[0]["화요일_유동인구_수"]) },
+      { day: "수", value: parseInt(popData[0]["수요일_유동인구_수"]) },
+      { day: "목", value: parseInt(popData[0]["목요일_유동인구_수"]) },
+      { day: "금", value: parseInt(popData[0]["금요일_유동인구_수"]) },
+      { day: "토", value: parseInt(popData[0]["토요일_유동인구_수"]) },
+      { day: "일", value: parseInt(popData[0]["일요일_유동인구_수"]) }
+    ];
+
+    const rev_day_data = [
+      { day: "월", value: parseInt(revData[0]["월요일_매출_금액"]) * weight},
+      { day: "화", value: parseInt(revData[0]["화요일_매출_금액"]) * weight},
+      { day: "수", value: parseInt(revData[0]["수요일_매출_금액"]) * weight},
+      { day: "목", value: parseInt(revData[0]["목요일_매출_금액"]) * weight},
+      { day: "금", value: parseInt(revData[0]["금요일_매출_금액"]) * weight},
+      { day: "토", value: parseInt(revData[0]["토요일_매출_금액"]) * weight},
+      { day: "일", value: parseInt(revData[0]["일요일_매출_금액"]) * weight}
+    ];
+
+    // Create the Sankey diagram data structure
+    const data = {
+      nodes: [
+        { name: "00~06" },
+        { name: "06~11" },
+        { name: "11~14" },
+        { name: "14~17" },
+        { name: "17~21" },
+        { name: "21~24" },
+        { name: "월요일" },
+        { name: "화요일" },
+        { name: "수요일" },
+        { name: "목요일" },
+        { name: "금요일" },
+        { name: "토요일" },
+        { name: "일요일" },
+        { name: "유동인구" },
+        { name: "매출" }
+      ],
+      links: [
+        { source: 13, target: 0, value: pop_time_data[0].value },
+        { source: 13, target: 1, value: pop_time_data[1].value },
+        { source: 13, target: 2, value: pop_time_data[2].value },
+        { source: 13, target: 3, value: pop_time_data[3].value },
+        { source: 13, target: 4, value: pop_time_data[4].value },
+        { source: 13, target: 5, value: pop_time_data[5].value },
+        { source: 13, target: 6, value: pop_day_data[0].value },
+        { source: 13, target: 7, value: pop_day_data[1].value },
+        { source: 13, target: 8, value: pop_day_data[2].value },
+        { source: 13, target: 9, value: pop_day_data[3].value },
+        { source: 13, target: 10, value: pop_day_data[4].value },
+        { source: 13, target: 11, value: pop_day_data[5].value },
+        { source: 13, target: 12, value: pop_day_data[6].value },
+        { source: 0, target: 14, value: rev_time_data[0].value },
+        { source: 1, target: 14, value: rev_time_data[1].value },
+        { source: 2, target: 14, value: rev_time_data[2].value },
+        { source: 3, target: 14, value: rev_time_data[3].value },
+        { source: 4, target: 14, value: rev_time_data[4].value },
+        { source: 5, target: 14, value: rev_time_data[5].value },
+        { source: 6, target: 14, value: rev_day_data[0].value },
+        { source: 7, target: 14, value: rev_day_data[1].value },
+        { source: 8, target: 14, value: rev_day_data[2].value },
+        { source: 9, target: 14, value: rev_day_data[3].value },
+        { source: 10, target: 14, value: rev_day_data[4].value },
+        { source: 11, target: 14, value: rev_day_data[5].value },
+        { source: 12, target: 14, value: rev_day_data[6].value }
+      ]
+    };
+
+    const width = 600;
+    const height = 380;
+    const offset = 25;
+
+    // Create the SVG container
+    const svg = d3.select("#sankey-chart")
+      .append("svg")
+      .attr("width", width + offset)
+      .attr("height", height);
+
+    const g = svg.append("g")
+      .attr("transform", `translate(${offset},0)`);
+
+    // Define the Sankey diagram properties
+    const sankey = d3.sankey()
+      .nodeWidth(15)
+      .nodePadding(10)
+      .extent([[1, 1], [width - 1, height - 6]]);
+
+    const { nodes, links } = sankey({
+      nodes: data.nodes.map(d => Object.assign({}, d)),
+      links: data.links.map(d => Object.assign({}, d))
+    });
+
+    // Manually set node positions
+    nodes.forEach(node => {
+      if (node.name === "유동인구") {
+        node.x0 = 0;
+        node.x1 = 15;
+      } else if (node.name === "매출") {
+        node.x0 = width - 15;
+        node.x1 = width;
+      } else if (node.name.includes("요일") || node.name.includes("~")) {
+        node.x0 = (width - 15) / 2;
+        node.x1 = (width + 15) / 2;
+      }
+    });
+
+    // Create the Sankey links
+    g.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .attr("stroke-opacity", 0.2)
+      .selectAll("path")
+      .data(links)
+      .enter()
+      .append("path")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke-width", d => Math.max(1, d.width));
+
+    // Create the Sankey nodes
+    const node = g.append("g")
+      .attr("stroke", "#000")
+      .selectAll("rect")
+      .data(nodes)
+      .enter()
+      .append("rect")
+      .attr("x", d => d.x0)
+      .attr("y", d => d.y0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("fill", d => {
+        if (d.name === "유동인구") return "blue";
+        if (d.name === "매출") return "red";
+        return "green";
+      })
+      .append("title")
+      .text(d => `${d.name}\n${d.value}`);
+
+    // Add text labels to the nodes  
+    g.append("g")
+      .style("font", "10px sans-serif")
+      .selectAll("text")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .attr("x", d => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", d => (d.y1 + d.y0) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", d => (d.x0 < width / 2 ? "start" : "end"))
+      .text(d => d.name);
+  });
+}
+
 function getVisualization(marker, checker) {
   // Remove all existing elements
   d3.select("#time-graph").selectAll("*").remove();
   d3.select("#day-graph").selectAll("*").remove();
+  d3.select("#sankey-chart").selectAll("*").remove();
 
-  if (checker === "pop") { // If the checker is set to "pop"
+  if (checker === "pop") {
     time_popVis(marker, checker);
     day_popVis(marker, checker);
-  } else if (checker === "rev") { // If the checker is set to "rev"
+  } else if (checker === "rev") {
     time_revVis(marker, checker);
     day_revVis(marker, checker);
-  } else if (checker === "both") { // If the checker is set to "both"
+  } else if (checker === "both") {
     time_bothVis(marker, checker);
     day_bothVis(marker, checker);
+  } else if (checker === "sankey") {
+    sankeyVis(marker, checker);
+  } else if (checker === "pop_sankey") {
+    time_popVis(marker, checker);
+    day_popVis(marker, checker);
+    sankeyVis(marker, checker);
+  } else if (checker === "rev_sankey") {
+    time_revVis(marker, checker);
+    day_revVis(marker, checker);
+    sankeyVis(marker, checker);
+  } else if (checker === "all") {
+    time_bothVis(marker, checker);
+    day_bothVis(marker, checker);
+    sankeyVis(marker, checker);
   }
 }
 
