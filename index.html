@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="./css/main.css?v=1.1" />
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="./page/main.js?v=2.0"></script>
+    <script src="https://unpkg.com/d3-array@1"></script>
+    <script src="https://unpkg.com/d3-collection@1"></script>
+    <script src="https://unpkg.com/d3-path@1"></script>
+    <script src="https://unpkg.com/d3-shape@1"></script>
+    <script src="https://unpkg.com/d3-sankey@0"></script>
+    <script>
+      var sankey = d3.sankey();
+    </script>
     <title>Document</title>
   </head>
   <body>
@@ -29,17 +37,24 @@
             value="rev"
             onclick="getCheckboxValue(event)""
           />매출
+          <input
+          type="checkbox"
+          name="sankey"
+          value="sankey"
+          onclick="getCheckboxValue(event)"
+        />Sankey
         </div>
         <div id="map">
           <img
             src="./data/sinchon_map.png"
-            style="width: 720px; height: 620px"
+            style="width: 1200px; height: 1060px"
           />
         </div>
       </div>
       <div class="detail-graph">
         <div id="time-graph">시간 그래프</div>
         <div id="day-graph">요일 그래프</div>
+        <div id="sankey-chart">sankey chart</div>
       </div>
     </div>
     <script src="./page/main.js?v=2.0"></script>
