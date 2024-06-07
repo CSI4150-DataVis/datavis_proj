@@ -154,8 +154,21 @@ function time_popVis(marker, checker) {
       .y((d) => y(d.value))
       .curve(d3.curveBasis);
 
-    // Append the pop line to the SVG
-    svg.append("path").datum(pop_time_data).attr("class", "line-pop").attr("d", line);
+    // Append the pop line to the SVG with animation
+    const path = svg.append("path")
+      .datum(pop_time_data)
+      .attr("class", "line-pop")
+      .attr("d", line);
+
+    const totalLength = path.node().getTotalLength();
+
+    path
+      .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
 
     // Add a legend
     svg.append("rect").attr("x", width + 10).attr("y", 4).attr("width", 10).attr("height", 10).attr("fill", "blue");
@@ -222,8 +235,21 @@ function time_revVis(marker, checker) {
       .y((d) => y(d.value))
       .curve(d3.curveBasis);
 
-    // Append the rev line to the SVG
-    svg.append("path").datum(rev_time_data).attr("class", "line-rev").attr("d", line);
+    // Append the rev line to the SVG with animation
+    const path = svg.append("path")
+      .datum(rev_time_data)
+      .attr("class", "line-rev")
+      .attr("d", line);
+
+    const totalLength = path.node().getTotalLength();
+
+    path
+      .attr("stroke-dasharray", `${totalLength} ${totalLength}`)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
 
     // Add a legend
     svg.append("rect").attr("x", width + 10).attr("y", -4).attr("width", 10).attr("height", 10).attr("fill", "red");
@@ -315,19 +341,45 @@ function time_bothVis(marker, checker) {
       .y((d) => yRev(d.rev_value))
       .curve(d3.curveBasis);
 
-    // Append the pop line to the SVG
-    svg.append("path").datum(pop_time_data).attr("class", "line-pop").attr("d", linePop);
-    // Append the rev line to the SVG
-    svg.append("path").datum(rev_time_data).attr("class", "line-rev").attr("d", lineRev);
+    // Append the pop line to the SVG with animation
+    const popPath = svg.append("path")
+      .datum(pop_time_data)
+      .attr("class", "line-pop")
+      .attr("d", linePop);
+
+    const popTotalLength = popPath.node().getTotalLength();
+
+    popPath
+      .attr("stroke-dasharray", `${popTotalLength} ${popTotalLength}`)
+      .attr("stroke-dashoffset", popTotalLength)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
+
+    // Append the rev line to the SVG with animation
+    const revPath = svg.append("path")
+      .datum(rev_time_data)
+      .attr("class", "line-rev")
+      .attr("d", lineRev);
+
+    const revTotalLength = revPath.node().getTotalLength();
+
+    revPath
+      .attr("stroke-dasharray", `${revTotalLength} ${revTotalLength}`)
+      .attr("stroke-dashoffset", revTotalLength)
+      .transition()
+      .duration(1000)
+      .ease(d3.easeLinear)
+      .attr("stroke-dashoffset", 0);
 
     // Add a legend for pop line
     svg.append("rect").attr("x", width + 10).attr("y", -20).attr("width", 10).attr("height", 10).attr("fill", "blue");
-    svg.append("text").attr("x", width + 25).attr("y", -13).text("유동인구").style("font-size", "12px").attr("alignment-baseline", "middle"); 
-    
+    svg.append("text").attr("x", width + 25).attr("y", -13).text("유동인구").style("font-size", "12px").attr("alignment-baseline", "middle");
+
     // Add a legend for rev line
     svg.append("rect").attr("x", width + 10).attr("y", -4).attr("width", 10).attr("height", 10).attr("fill", "red");
-    svg.append("text").attr("x", width + 25).attr("y", 3).text("매출 (원)").style("font-size", "12px").attr("alignment-baseline", "middle");        
-
+    svg.append("text").attr("x", width + 25).attr("y", 3).text("매출 (원)").style("font-size", "12px").attr("alignment-baseline", "middle");
   });
 }
 
@@ -383,16 +435,20 @@ function day_popVis(marker, checker) {
     // Append the y axis to the SVG
     svg.append("g").call(d3.axisLeft(y));
 
-    // Append the pop bars to the SVG
+    // Append the pop bars to the SVG with animation
     svg.selectAll(".bar-pop")
       .data(pop_day_data)
       .enter()
       .append("rect")
       .attr("class", "bar-pop")
       .attr("x", (d) => x(d.day))
-      .attr("y", (d) => y(d.value))
+      .attr("y", height)
       .attr("width", x.bandwidth())
-      .attr("height", (d) => height - y(d.value))
+      .attr("height", 0)
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => y(d.value))
+      .attr("height", (d) => height - y(d.value));
 
     // Add a legend
     svg.append("rect").attr("x", width + 10).attr("y", 4).attr("width", 10).attr("height", 10).attr("fill", "blue");
@@ -454,16 +510,20 @@ function day_revVis(marker, checker) {
       .attr("transform", `translate(${width}, 0)`)
       .call(d3.axisRight(y));
 
-    // Append the rev bars to the SVG
+    // Append the rev bars to the SVG with animation
     svg.selectAll(".bar-rev")
       .data(rev_day_data)
       .enter()
       .append("rect")
       .attr("class", "bar-rev")
       .attr("x", (d) => x(d.day))
-      .attr("y", (d) => y(d.value))
+      .attr("y", height)
       .attr("width", x.bandwidth())
-      .attr("height", (d) => height - y(d.value))
+      .attr("height", 0)
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => y(d.value))
+      .attr("height", (d) => height - y(d.value));
 
     // Add a legend
     svg.append("rect").attr("x", width + 10).attr("y", 4).attr("width", 10).attr("height", 10).attr("fill", "red");
@@ -544,42 +604,50 @@ function day_bothVis(marker, checker) {
     svg.append("g").call(d3.axisLeft(yPop));
     svg.append("g").attr("transform", `translate(${width}, 0)`).call(d3.axisRight(yRev));
 
-    // Append the pop bars to the SVG
+    // Append the pop bars to the SVG with animation
     svg.selectAll(".bar-pop")
       .data(pop_day_data)
       .enter()
       .append("rect")
       .attr("class", "bar-pop")
       .attr("x", (d) => x(d.pop_day))
-      .attr("y", (d) => yPop(d.pop_value))
+      .attr("y", height)
       .attr("width", x.bandwidth() / 2)
-      .attr("height", (d) => height - yPop(d.pop_value))
+      .attr("height", 0)
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => yPop(d.pop_value))
+      .attr("height", (d) => height - yPop(d.pop_value));
 
-    // Append the rev bars to the SVG
+    // Append the rev bars to the SVG with animation
     svg.selectAll(".bar-rev")
       .data(rev_day_data)
       .enter()
       .append("rect")
       .attr("class", "bar-rev")
       .attr("x", (d) => x(d.rev_day) + x.bandwidth() / 2)
-      .attr("y", (d) => yRev(d.rev_value))
+      .attr("y", height)
       .attr("width", x.bandwidth() / 2)
-      .attr("height", (d) => height - yRev(d.rev_value))
+      .attr("height", 0)
+      .transition()
+      .duration(1000)
+      .attr("y", (d) => yRev(d.rev_value))
+      .attr("height", (d) => height - yRev(d.rev_value));
 
     // Add a legend for pop bars
     svg.append("rect").attr("x", width + 10).attr("y", -20).attr("width", 10).attr("height", 10).attr("fill", "blue");
     svg.append("text").attr("x", width + 25).attr("y", -13).text("유동인구").style("font-size", "12px").attr("alignment-baseline", "middle"); 
-    
+
     // Add a legend for rev bars
     svg.append("rect").attr("x", width + 10).attr("y", -4).attr("width", 10).attr("height", 10).attr("fill", "red");
-    svg.append("text").attr("x", width + 25).attr("y", 3).text("매출 (원)").style("font-size", "12px").attr("alignment-baseline", "middle");    
+    svg.append("text").attr("x", width + 25).attr("y", 3).text("매출 (원)").style("font-size", "12px").attr("alignment-baseline", "middle"); 
   });
 }
 
 // sankey chart
 function sankeyVis(marker, checker) {
-  // weight (pop - rev)
-  weight = 0.004
+  const weight = 0.004; // weight for pop - rev
+
   // Extract the data from csv files
   Promise.all([
     d3.csv("./data/population_filtered.csv"),
@@ -623,7 +691,7 @@ function sankeyVis(marker, checker) {
       { day: "일", value: parseInt(revData[0]["일요일_매출_금액"]) * weight}
     ];
 
-    // Create the Sankey diagram data structure
+    // Create the Sankey diagram data structure 
     const data = {
       nodes: [
         { name: "00~06" },
@@ -710,8 +778,8 @@ function sankeyVis(marker, checker) {
       }
     });
 
-    // Create the Sankey links
-    g.append("g")
+    // Create the Sankey links with animation
+    const link = g.append("g")
       .attr("fill", "none")
       .attr("stroke", "#000")
       .attr("stroke-opacity", 0.2)
@@ -720,9 +788,18 @@ function sankeyVis(marker, checker) {
       .enter()
       .append("path")
       .attr("d", d3.sankeyLinkHorizontal())
-      .attr("stroke-width", d => Math.max(1, d.width));
+      .attr("stroke-width", d => Math.max(1, d.width))
+      .attr("stroke-dasharray", function(d) {
+        return this.getTotalLength();
+      })
+      .attr("stroke-dashoffset", function(d) {
+        return this.getTotalLength();
+      })
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0);
 
-    // Create the Sankey nodes
+    // Create the Sankey nodes with animation
     const node = g.append("g")
       .attr("stroke", "#000")
       .selectAll("rect")
@@ -738,10 +815,12 @@ function sankeyVis(marker, checker) {
         if (d.name === "매출") return "red";
         return "green";
       })
-      .append("title")
-      .text(d => `${d.name}\n${d.value}`);
+      .style("opacity", 0)
+      .transition()
+      .duration(1000)
+      .style("opacity", 1);
 
-    // Add text labels to the nodes  
+    // Add text labels to the nodes with animation
     g.append("g")
       .style("font", "10px sans-serif")
       .selectAll("text")
@@ -752,7 +831,12 @@ function sankeyVis(marker, checker) {
       .attr("y", d => (d.y1 + d.y0) / 2)
       .attr("dy", "0.35em")
       .attr("text-anchor", d => (d.x0 < width / 2 ? "start" : "end"))
-      .text(d => d.name);
+      .text(d => d.name)
+      .style("opacity", 0)
+      .transition()
+      .delay(1000)
+      .duration(1000)
+      .style("opacity", 1);
   });
 }
 
