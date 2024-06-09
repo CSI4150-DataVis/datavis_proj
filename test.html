@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D3.js Map</title>
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      /* CSS for the map container */
+      #map {
+        width: 100%;
+        height: 600px;
+      }
+      /* CSS for the map paths */
+      .map-path {
+        fill: none;
+        stroke: #000;
+        stroke-width: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <svg id="map"></svg>
+    <script>
+      // Set up SVG dimensions
+      var width = 800;
+      var height = 600;
+
+      // Create SVG element
+      var svg = d3.select("#map").attr("width", width).attr("height", height);
+
+      // Projection and path generator
+      var projection = d3.geoMercator();
+      var path = d3.geoPath().projection(projection);
+
+      // Load GeoJSON data
+      d3.json("./data/map.geojson").then(function (geojson) {
+        console.log(geojson);
+        // Calculate the bounding box of the GeoJSON data
+        var bounds = path.bounds(geojson);
+
+        // Calculate the scale and translate to fit the GeoJSON data within the SVG
+        var scale =
+          0.95 /
+          Math.max(
+            (bounds[1][0] - bounds[0][0]) / width,
+            (bounds[1][1] - bounds[0][1]) / height
+          );
+        var translate = [
+          (width - scale * (bounds[1][0] + bounds[0][0])) / 2,
+          (height - scale * (bounds[1][1] + bounds[0][1])) / 2,
+        ];
+
+        // Update projection with new scale and translate values
+        projection.scale(scale).translate(translate);
+
+        // Draw map paths
+        svg
+          .selectAll(".map-path")
+          .data(geojson.features)
+          .enter()
+          .append("path")
+          .attr("class", "map-path")
+          .attr("d", path);
+      });
+    </script>
+  </body>
+</html>

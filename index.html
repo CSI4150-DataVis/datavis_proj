@@ -7,9 +7,20 @@
       http-equiv="Cache-Control"
       content="no-cache, no-store, must-revalidate"
     />
-    <link rel="stylesheet" href="./css/main.css?v=1.1" />
+    <link rel="stylesheet" href="./css/main.css?v=2.1" />
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="./page/main.js?v=2.0"></script>
+    <!-- <script src="./page/main.js?v=2.0"></script> -->
     <script src="https://unpkg.com/d3-array@1"></script>
     <script src="https://unpkg.com/d3-collection@1"></script>
     <script src="https://unpkg.com/d3-path@1"></script>
@@ -30,33 +41,23 @@
             name="pop-or-rev"
             value="pop"
             onclick="getCheckboxValue(event)"
-          />유동인구
+          />유동인구 <input type="checkbox" name="pop-or-rev" value="rev"
+          onclick="getCheckboxValue(event)"" />매출
           <input
             type="checkbox"
-            name="pop-or-rev"
-            value="rev"
-            onclick="getCheckboxValue(event)""
-          />매출
-          <input
-          type="checkbox"
-          name="sankey"
-          value="sankey"
-          onclick="getCheckboxValue(event)"
-        />Sankey
+            name="sankey"
+            value="sankey"
+            onclick="getCheckboxValue(event)"
+          />Sankey
         </div>
-        <div id="map">
-          <img
-            src="./data/sinchon_map.png"
-            style="width: 1200px; height: 1060px"
-          />
-        </div>
+        <div id="map"></div>
       </div>
       <div class="detail-graph">
-        <div id="time-graph">시간 그래프</div>
-        <div id="day-graph">요일 그래프</div>
-        <div id="sankey-chart">sankey chart</div>
+        <div id="time-graph"></div>
+        <div id="day-graph"></div>
+        <div id="sankey-chart"></div>
       </div>
     </div>
-    <script src="./page/main.js?v=2.0"></script>
+    <script src="./page/main.js?v=3.39"></script>
   </body>
 </html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      /* CSS for the map container */
+      #map {
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      // Create a Leaflet map centered at a specific location and zoom level
+      var map = L.map("map").setView([37.556, 126.932], 13);
+
+      // Add a tile layer from OpenStreetMap
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Load GeoJSON data and add it to the map
+      fetch("./data/map.geojson")
+        .then((response) => response.json())
+        .then((data) => {
+          L.geoJSON(data).addTo(map);
+        });
+    </script>
+  </body>
+</html>
