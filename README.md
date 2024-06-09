@@ -16,5 +16,5 @@
 
 ## 4. 프로젝트 실행 사진
 
-![project_01](/data/project_1.png)
-![project_02](/data/project_2.png)
+![project_1](/data/project_1.png)
+![project_2](/data/project_2.png)
