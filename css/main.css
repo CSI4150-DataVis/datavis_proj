@@ -1,17 +1,23 @@
 body {
   background-color: #d9d9d9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .full-map {
   width: 1500px;
-  height: 2000px;
-  display: flex;
-  flex-direction: row;
+  height: 1000px;
+  /* display: flex;
+  flex-direction: row; */
 }
 
 .checkbox-map {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .checkbox {
@@ -22,14 +28,28 @@ body {
 
 #map {
   width: 1200px;
-  height: 1464px;
+  height: 720px;
 }
 
 .detail-graph {
-  width: 650px;
+  width: 1500px;
   height: 2000px;
   display: flex;
   flex-direction: column;
+}
+
+.graph {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.sankey {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
 #day-graph {
@@ -53,7 +73,7 @@ body {
 #day-sankey-chart {
   width: 650px;
   height: 400px;
-  border: 1px solid blueviolet;
+  /* border: 1px solid blueviolet; */
 }
 
 .line-pop {
@@ -80,9 +100,4 @@ body {
   fill: white; /* Set the fill color of the land paths to white */
   stroke: #333;
   stroke-width: 3px;
-}
-
-#map {
-  width: 1200px;
-  height: 1060px;
 }
