@@ -123,23 +123,21 @@ function getMarkerValue(event) {
     serviceArray = getServiceValue(marker);
     console.log(marker);
     console.log(serviceArray);
-    var childChecker = document
-      .getElementsByClassName("checkbox")[0]
-      .querySelector("#name");
+    var divBox = document.getElementById("nameBox");
+    var childChecker = divBox.querySelector("#name");
     if (childChecker) {
-      document.getElementsByClassName("checkbox")[0].removeChild(childChecker);
+      divBox.removeChild(childChecker);
     }
     var newDiv = document.createElement("div");
     newDiv.id = "name";
     newDiv.innerHTML = marker;
-    document.getElementsByClassName("checkbox")[0].appendChild(newDiv);
+    divBox.appendChild(newDiv);
     var serviceChecker = document.getElementById("select");
     if (serviceChecker) {
-      document
-        .getElementsByClassName("checkbox")[0]
-        .removeChild(serviceChecker);
+      divBox.removeChild(serviceChecker);
     }
-    makeSelectBox(serviceArray);
+    var select = makeSelectBox(serviceArray);
+    divBox.appendChild(select);
   }
 }
 
@@ -162,7 +160,8 @@ function makeSelectBox(items) {
   });
 
   // Append the select element to the container
-  container.appendChild(select);
+  //container.appendChild(select);
+  return select;
 }
 
 // Visualization function
@@ -171,29 +170,35 @@ function time_popVis(marker, checker) {
   // Extract the data from csv file
   d3.csv("./data/population_filtered.csv").then(function (data) {
     var pop_time_data = [];
+    var target_year = "20234";
+    var filteredData = data.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
+
     pop_time_data[0] = {
       time: "00~06",
-      value: parseInt(data[0]["시간대_00_06_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_00_06_유동인구_수"]),
     };
     pop_time_data[1] = {
       time: "06~11",
-      value: parseInt(data[0]["시간대_06_11_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_06_11_유동인구_수"]),
     };
     pop_time_data[2] = {
       time: "11~14",
-      value: parseInt(data[0]["시간대_11_14_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_11_14_유동인구_수"]),
     };
     pop_time_data[3] = {
       time: "14~17",
-      value: parseInt(data[0]["시간대_14_17_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_14_17_유동인구_수"]),
     };
     pop_time_data[4] = {
       time: "17~21",
-      value: parseInt(data[0]["시간대_17_21_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_17_21_유동인구_수"]),
     };
     pop_time_data[5] = {
       time: "21~24",
-      value: parseInt(data[0]["시간대_21_24_유동인구_수"]),
+      value: parseInt(filteredData[0]["시간대_21_24_유동인구_수"]),
     };
 
     // Define the dimensions and margins of the graph
@@ -265,13 +270,14 @@ function time_popVis(marker, checker) {
       .attr("y", 4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "blue");
+      .attr("fill", "#5785af");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 11)
       .text("유동인구")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -279,31 +285,38 @@ function time_popVis(marker, checker) {
 // time - revenue graph
 function time_revVis(marker, checker) {
   d3.csv("./data/revenue_filtered.csv").then(function (data) {
+    var target_year = "20234";
+    var filteredData = data.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
     // Extract the data from csv file
     var rev_time_data = [];
     rev_time_data[0] = {
       time: "00~06",
-      value: parseInt(data[0]["시간대_00~06_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_00~06_매출_금액"]),
     };
     rev_time_data[1] = {
       time: "06~11",
-      value: parseInt(data[0]["시간대_06~11_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_06~11_매출_금액"]),
     };
     rev_time_data[2] = {
       time: "11~14",
-      value: parseInt(data[0]["시간대_11~14_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_11~14_매출_금액"]),
     };
     rev_time_data[3] = {
       time: "14~17",
-      value: parseInt(data[0]["시간대_14~17_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_14~17_매출_금액"]),
     };
     rev_time_data[4] = {
       time: "17~21",
-      value: parseInt(data[0]["시간대_17~21_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_17~21_매출_금액"]),
     };
     rev_time_data[5] = {
       time: "21~24",
-      value: parseInt(data[0]["시간대_21~24_매출_금액"]),
+      value: parseInt(filteredData[0]["시간대_21~24_매출_금액"]),
     };
 
     // Define the dimensions and margins of the graph
@@ -378,13 +391,14 @@ function time_revVis(marker, checker) {
       .attr("y", -4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "red");
+      .attr("fill", "#a6507e");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 3)
       .text("매출 (원)")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -395,58 +409,69 @@ function time_bothVis(marker, checker) {
     d3.csv("./data/population_filtered.csv"),
     d3.csv("./data/revenue_filtered.csv"),
   ]).then(function ([popData, revData]) {
+    var target_year = "20234";
+    var filteredRevData = revData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
+    var filteredPopData = popData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
     var pop_time_data = [
       // Extract the data from csv files
       {
         pop_time: "00~06",
-        pop_value: parseInt(popData[0]["시간대_00_06_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_00_06_유동인구_수"]),
       },
       {
         pop_time: "06~11",
-        pop_value: parseInt(popData[0]["시간대_06_11_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_06_11_유동인구_수"]),
       },
       {
         pop_time: "11~14",
-        pop_value: parseInt(popData[0]["시간대_11_14_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_11_14_유동인구_수"]),
       },
       {
         pop_time: "14~17",
-        pop_value: parseInt(popData[0]["시간대_14_17_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_14_17_유동인구_수"]),
       },
       {
         pop_time: "17~21",
-        pop_value: parseInt(popData[0]["시간대_17_21_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_17_21_유동인구_수"]),
       },
       {
         pop_time: "21~24",
-        pop_value: parseInt(popData[0]["시간대_21_24_유동인구_수"]),
+        pop_value: parseInt(filteredPopData[0]["시간대_21_24_유동인구_수"]),
       },
     ];
 
     var rev_time_data = [
       {
         rev_time: "00~06",
-        rev_value: parseInt(revData[0]["시간대_00~06_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_00~06_매출_금액"]),
       },
       {
         rev_time: "06~11",
-        rev_value: parseInt(revData[0]["시간대_06~11_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_06~11_매출_금액"]),
       },
       {
         rev_time: "11~14",
-        rev_value: parseInt(revData[0]["시간대_11~14_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_11~14_매출_금액"]),
       },
       {
         rev_time: "14~17",
-        rev_value: parseInt(revData[0]["시간대_14~17_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_14~17_매출_금액"]),
       },
       {
         rev_time: "17~21",
-        rev_value: parseInt(revData[0]["시간대_17~21_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_17~21_매출_금액"]),
       },
       {
         rev_time: "21~24",
-        rev_value: parseInt(revData[0]["시간대_21~24_매출_금액"]),
+        rev_value: parseInt(filteredRevData[0]["시간대_21~24_매출_금액"]),
       },
     ];
 
@@ -553,13 +578,14 @@ function time_bothVis(marker, checker) {
       .attr("y", -20)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "blue");
+      .attr("fill", "#5785af");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", -13)
       .text("유동인구")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
 
     // Add a legend for rev line
@@ -569,13 +595,14 @@ function time_bothVis(marker, checker) {
       .attr("y", -4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "red");
+      .attr("fill", "#a6507e");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 3)
       .text("매출 (원)")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -583,35 +610,40 @@ function time_bothVis(marker, checker) {
 // date - population graph
 function day_popVis(marker, checker) {
   d3.csv("./data/population_filtered.csv").then(function (data) {
+    var target_year = "20234";
+    var filteredData = data.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
     // Extract the data from csv file
     var pop_day_data = [];
     pop_day_data[0] = {
       day: "월",
-      value: parseInt(data[0]["월요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["월요일_유동인구_수"]),
     };
     pop_day_data[1] = {
       day: "화",
-      value: parseInt(data[0]["화요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["화요일_유동인구_수"]),
     };
     pop_day_data[2] = {
       day: "수",
-      value: parseInt(data[0]["수요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["수요일_유동인구_수"]),
     };
     pop_day_data[3] = {
       day: "목",
-      value: parseInt(data[0]["목요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["목요일_유동인구_수"]),
     };
     pop_day_data[4] = {
       day: "금",
-      value: parseInt(data[0]["금요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["금요일_유동인구_수"]),
     };
     pop_day_data[5] = {
       day: "토",
-      value: parseInt(data[0]["토요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["토요일_유동인구_수"]),
     };
     pop_day_data[6] = {
       day: "일",
-      value: parseInt(data[0]["일요일_유동인구_수"]),
+      value: parseInt(filteredData[0]["일요일_유동인구_수"]),
     };
 
     // Define the dimensions and margins of the graph
@@ -676,13 +708,14 @@ function day_popVis(marker, checker) {
       .attr("y", 4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "blue");
+      .attr("fill", "#5785af");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 11)
       .text("유동인구")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -690,35 +723,42 @@ function day_popVis(marker, checker) {
 // date - revenue graph
 function day_revVis(marker, checker) {
   d3.csv("./data/revenue_filtered.csv").then(function (data) {
+    var target_year = "20234";
+    var filteredData = data.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
     // Extract the data from csv file
     var rev_day_data = [];
     rev_day_data[0] = {
       day: "월",
-      value: parseInt(data[0]["월요일_매출_금액"]),
+      value: parseInt(filteredData[0]["월요일_매출_금액"]),
     };
     rev_day_data[1] = {
       day: "화",
-      value: parseInt(data[0]["화요일_매출_금액"]),
+      value: parseInt(filteredData[0]["화요일_매출_금액"]),
     };
     rev_day_data[2] = {
       day: "수",
-      value: parseInt(data[0]["수요일_매출_금액"]),
+      value: parseInt(filteredData[0]["수요일_매출_금액"]),
     };
     rev_day_data[3] = {
       day: "목",
-      value: parseInt(data[0]["목요일_매출_금액"]),
+      value: parseInt(filteredData[0]["목요일_매출_금액"]),
     };
     rev_day_data[4] = {
       day: "금",
-      value: parseInt(data[0]["금요일_매출_금액"]),
+      value: parseInt(filteredData[0]["금요일_매출_금액"]),
     };
     rev_day_data[5] = {
       day: "토",
-      value: parseInt(data[0]["토요일_매출_금액"]),
+      value: parseInt(filteredData[0]["토요일_매출_금액"]),
     };
     rev_day_data[6] = {
       day: "일",
-      value: parseInt(data[0]["일요일_매출_금액"]),
+      value: parseInt(filteredData[0]["일요일_매출_금액"]),
     };
 
     // Define the dimensions and margins of the graph
@@ -786,13 +826,14 @@ function day_revVis(marker, checker) {
       .attr("y", 4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "red");
+      .attr("fill", "#a6507e");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 11)
       .text("매출 (원)")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -804,24 +845,77 @@ function day_bothVis(marker, checker) {
     d3.csv("./data/population_filtered.csv"),
     d3.csv("./data/revenue_filtered.csv"),
   ]).then(function ([popData, revData]) {
+    var target_year = "20234";
+    var filteredRevData = revData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
+    var filteredPopData = popData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
     var pop_day_data = [
-      { pop_day: "월", pop_value: parseInt(popData[0]["월요일_유동인구_수"]) },
-      { pop_day: "화", pop_value: parseInt(popData[0]["화요일_유동인구_수"]) },
-      { pop_day: "수", pop_value: parseInt(popData[0]["수요일_유동인구_수"]) },
-      { pop_day: "목", pop_value: parseInt(popData[0]["목요일_유동인구_수"]) },
-      { pop_day: "금", pop_value: parseInt(popData[0]["금요일_유동인구_수"]) },
-      { pop_day: "토", pop_value: parseInt(popData[0]["토요일_유동인구_수"]) },
-      { pop_day: "일", pop_value: parseInt(popData[0]["일요일_유동인구_수"]) },
+      {
+        pop_day: "월",
+        pop_value: parseInt(filteredPopData[0]["월요일_유동인구_수"]),
+      },
+      {
+        pop_day: "화",
+        pop_value: parseInt(filteredPopData[0]["화요일_유동인구_수"]),
+      },
+      {
+        pop_day: "수",
+        pop_value: parseInt(filteredPopData[0]["수요일_유동인구_수"]),
+      },
+      {
+        pop_day: "목",
+        pop_value: parseInt(filteredPopData[0]["목요일_유동인구_수"]),
+      },
+      {
+        pop_day: "금",
+        pop_value: parseInt(filteredPopData[0]["금요일_유동인구_수"]),
+      },
+      {
+        pop_day: "토",
+        pop_value: parseInt(filteredPopData[0]["토요일_유동인구_수"]),
+      },
+      {
+        pop_day: "일",
+        pop_value: parseInt(filteredPopData[0]["일요일_유동인구_수"]),
+      },
     ];
 
     var rev_day_data = [
-      { rev_day: "월", rev_value: parseInt(revData[0]["월요일_매출_금액"]) },
-      { rev_day: "화", rev_value: parseInt(revData[0]["화요일_매출_금액"]) },
-      { rev_day: "수", rev_value: parseInt(revData[0]["수요일_매출_금액"]) },
-      { rev_day: "목", rev_value: parseInt(revData[0]["목요일_매출_금액"]) },
-      { rev_day: "금", rev_value: parseInt(revData[0]["금요일_매출_금액"]) },
-      { rev_day: "토", rev_value: parseInt(revData[0]["토요일_매출_금액"]) },
-      { rev_day: "일", rev_value: parseInt(revData[0]["일요일_매출_금액"]) },
+      {
+        rev_day: "월",
+        rev_value: parseInt(filteredRevData[0]["월요일_매출_금액"]),
+      },
+      {
+        rev_day: "화",
+        rev_value: parseInt(filteredRevData[0]["화요일_매출_금액"]),
+      },
+      {
+        rev_day: "수",
+        rev_value: parseInt(filteredRevData[0]["수요일_매출_금액"]),
+      },
+      {
+        rev_day: "목",
+        rev_value: parseInt(filteredRevData[0]["목요일_매출_금액"]),
+      },
+      {
+        rev_day: "금",
+        rev_value: parseInt(filteredRevData[0]["금요일_매출_금액"]),
+      },
+      {
+        rev_day: "토",
+        rev_value: parseInt(filteredRevData[0]["토요일_매출_금액"]),
+      },
+      {
+        rev_day: "일",
+        rev_value: parseInt(filteredRevData[0]["일요일_매출_금액"]),
+      },
     ];
 
     // Define the dimensions and margins of the graph
@@ -912,13 +1006,14 @@ function day_bothVis(marker, checker) {
       .attr("y", -20)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "blue");
+      .attr("fill", "#5785af");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", -13)
       .text("유동인구")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
 
     // Add a legend for rev bars
@@ -928,13 +1023,14 @@ function day_bothVis(marker, checker) {
       .attr("y", -4)
       .attr("width", 10)
       .attr("height", 10)
-      .attr("fill", "red");
+      .attr("fill", "#a6507e");
     svg
       .append("text")
       .attr("x", width + 25)
       .attr("y", 3)
       .text("매출 (원)")
       .style("font-size", "12px")
+      .style("fill", "white")
       .attr("alignment-baseline", "middle");
   });
 }
@@ -947,57 +1043,68 @@ function time_sankeyVis(marker, checker) {
     d3.csv("./data/population_filtered.csv"),
     d3.csv("./data/revenue_filtered.csv"),
   ]).then(function ([popData, revData]) {
+    var target_year = "20234";
+    var filteredRevData = revData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
+    var filteredPopData = popData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
     const pop_time_data = [
       {
         time: "00~06",
-        value: parseInt(popData[0]["시간대_00_06_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_00_06_유동인구_수"]),
       },
       {
         time: "06~11",
-        value: parseInt(popData[0]["시간대_06_11_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_06_11_유동인구_수"]),
       },
       {
         time: "11~14",
-        value: parseInt(popData[0]["시간대_11_14_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_11_14_유동인구_수"]),
       },
       {
         time: "14~17",
-        value: parseInt(popData[0]["시간대_14_17_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_14_17_유동인구_수"]),
       },
       {
         time: "17~21",
-        value: parseInt(popData[0]["시간대_17_21_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_17_21_유동인구_수"]),
       },
       {
         time: "21~24",
-        value: parseInt(popData[0]["시간대_21_24_유동인구_수"]),
+        value: parseInt(filteredPopData[0]["시간대_21_24_유동인구_수"]),
       },
     ];
 
     const rev_time_data = [
       {
         time: "00~06",
-        value: parseInt(revData[0]["시간대_00~06_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_00~06_매출_금액"]) * weight,
       },
       {
         time: "06~11",
-        value: parseInt(revData[0]["시간대_06~11_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_06~11_매출_금액"]) * weight,
       },
       {
         time: "11~14",
-        value: parseInt(revData[0]["시간대_11~14_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_11~14_매출_금액"]) * weight,
       },
       {
         time: "14~17",
-        value: parseInt(revData[0]["시간대_14~17_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_14~17_매출_금액"]) * weight,
       },
       {
         time: "17~21",
-        value: parseInt(revData[0]["시간대_17~21_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_17~21_매출_금액"]) * weight,
       },
       {
         time: "21~24",
-        value: parseInt(revData[0]["시간대_21~24_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["시간대_21~24_매출_금액"]) * weight,
       },
     ];
 
@@ -1056,6 +1163,8 @@ function time_sankeyVis(marker, checker) {
       nodes: data.nodes.map((d) => Object.assign({}, d)),
       links: data.links.map((d) => Object.assign({}, d)),
     });
+    console.log(nodes);
+    console.log(links);
 
     // Manually set node positions
     nodes.forEach((node) => {
@@ -1075,19 +1184,36 @@ function time_sankeyVis(marker, checker) {
     const link = g
       .append("g")
       .attr("fill", "none")
-      .attr("stroke", "#000")
-      .attr("stroke-opacity", 0.2)
+      // .attr("stroke", "white")
+      // .attr("stroke-opacity", 0.2)
       .selectAll("path")
       .data(links)
       .enter()
       .append("g");
+
+    // // Create gradient definition
+    // const defs = svg.append("defs");
+
+    // // Define gradient
+    // const gradient = defs
+    //   .append("linearGradient")
+    //   .attr("id", "linkGradient")
+    //   .attr("gradientUnits", "userSpaceOnUse")
+    //   .attr("x1", "0%")
+    //   .attr("y1", "0%")
+    //   .attr("x2", "100%")
+    //   .attr("y2", "0%");
+
+    // gradient.append("stop").attr("offset", "50%").attr("stop-color", "purple");
+
+    // gradient.append("stop").attr("offset", "100%").attr("stop-color", "red");
 
     // Add border path
     link
       .append("path")
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", (d) => Math.max(1, d.width + 2)) // Add border width
-      .attr("stroke", "gray") // Border color
+      //.attr("stroke", "white") // Border color
       .attr("stroke-opacity", 0.5)
       .attr("stroke-dasharray", function (d) {
         return this.getTotalLength();
@@ -1104,7 +1230,8 @@ function time_sankeyVis(marker, checker) {
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("stroke-opacity", (d) => d.width / 50) // Adjust opacity based on width
-      .attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
+      // .attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
+      .attr("stroke", "#C6C6C6")
       .attr("stroke-dasharray", function (d) {
         return this.getTotalLength();
       })
@@ -1118,7 +1245,6 @@ function time_sankeyVis(marker, checker) {
     // Create the Sankey nodes with animation
     const node = g
       .append("g")
-      .attr("stroke", "#000")
       .selectAll("rect")
       .data(nodes)
       .enter()
@@ -1128,9 +1254,9 @@ function time_sankeyVis(marker, checker) {
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
       .attr("fill", (d) => {
-        if (d.name === "유동인구") return "blue";
-        if (d.name === "매출") return "red";
-        return "green";
+        if (d.name === "유동인구") return "#5785af";
+        if (d.name === "매출") return "#a6507e";
+        return "#8968A2";
       })
       .style("opacity", 0)
       .transition()
@@ -1144,6 +1270,7 @@ function time_sankeyVis(marker, checker) {
       .data(nodes)
       .enter()
       .append("text")
+      .style("fill", "white")
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "0.35em")
@@ -1165,24 +1292,56 @@ function day_sankeyVis(marker, checker) {
     d3.csv("./data/population_filtered.csv"),
     d3.csv("./data/revenue_filtered.csv"),
   ]).then(function ([popData, revData]) {
+    var target_year = "20234";
+    var filteredRevData = revData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year &&
+        d["상권_코드_명"] === marker &&
+        d["서비스_업종_코드_명"] === document.getElementById("select").value
+    );
+    var filteredPopData = popData.filter(
+      (d) =>
+        d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
+    );
     const pop_day_data = [
-      { day: "월", value: parseInt(popData[0]["월요일_유동인구_수"]) },
-      { day: "화", value: parseInt(popData[0]["화요일_유동인구_수"]) },
-      { day: "수", value: parseInt(popData[0]["수요일_유동인구_수"]) },
-      { day: "목", value: parseInt(popData[0]["목요일_유동인구_수"]) },
-      { day: "금", value: parseInt(popData[0]["금요일_유동인구_수"]) },
-      { day: "토", value: parseInt(popData[0]["토요일_유동인구_수"]) },
-      { day: "일", value: parseInt(popData[0]["일요일_유동인구_수"]) },
+      { day: "월", value: parseInt(filteredPopData[0]["월요일_유동인구_수"]) },
+      { day: "화", value: parseInt(filteredPopData[0]["화요일_유동인구_수"]) },
+      { day: "수", value: parseInt(filteredPopData[0]["수요일_유동인구_수"]) },
+      { day: "목", value: parseInt(filteredPopData[0]["목요일_유동인구_수"]) },
+      { day: "금", value: parseInt(filteredPopData[0]["금요일_유동인구_수"]) },
+      { day: "토", value: parseInt(filteredPopData[0]["토요일_유동인구_수"]) },
+      { day: "일", value: parseInt(filteredPopData[0]["일요일_유동인구_수"]) },
     ];
 
     const rev_day_data = [
-      { day: "월", value: parseInt(revData[0]["월요일_매출_금액"]) * weight },
-      { day: "화", value: parseInt(revData[0]["화요일_매출_금액"]) * weight },
-      { day: "수", value: parseInt(revData[0]["수요일_매출_금액"]) * weight },
-      { day: "목", value: parseInt(revData[0]["목요일_매출_금액"]) * weight },
-      { day: "금", value: parseInt(revData[0]["금요일_매출_금액"]) * weight },
-      { day: "토", value: parseInt(revData[0]["토요일_매출_금액"]) * weight },
-      { day: "일", value: parseInt(revData[0]["일요일_매출_금액"]) * weight },
+      {
+        day: "월",
+        value: parseInt(filteredRevData[0]["월요일_매출_금액"]) * weight,
+      },
+      {
+        day: "화",
+        value: parseInt(filteredRevData[0]["화요일_매출_금액"]) * weight,
+      },
+      {
+        day: "수",
+        value: parseInt(filteredRevData[0]["수요일_매출_금액"]) * weight,
+      },
+      {
+        day: "목",
+        value: parseInt(filteredRevData[0]["목요일_매출_금액"]) * weight,
+      },
+      {
+        day: "금",
+        value: parseInt(filteredRevData[0]["금요일_매출_금액"]) * weight,
+      },
+      {
+        day: "토",
+        value: parseInt(filteredRevData[0]["토요일_매출_금액"]) * weight,
+      },
+      {
+        day: "일",
+        value: parseInt(filteredRevData[0]["일요일_매출_금액"]) * weight,
+      },
     ];
 
     // Create the Sankey diagram data structure
@@ -1272,7 +1431,7 @@ function day_sankeyVis(marker, checker) {
       .append("path")
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", (d) => Math.max(1, d.width + 2)) // Add border width
-      .attr("stroke", "gray") // Border color
+      //.attr("stroke", "gray") // Border color
       .attr("stroke-opacity", 0.5)
       .attr("stroke-dasharray", function (d) {
         return this.getTotalLength();
@@ -1289,7 +1448,8 @@ function day_sankeyVis(marker, checker) {
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("stroke-opacity", (d) => d.width / 50) // Adjust opacity based on width
-      .attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
+      //.attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
+      .attr("stroke", "#C6C6C6")
       .attr("stroke-dasharray", function (d) {
         return this.getTotalLength();
       })
@@ -1303,7 +1463,6 @@ function day_sankeyVis(marker, checker) {
     // Create the Sankey nodes with animation
     const node = g
       .append("g")
-      .attr("stroke", "#000")
       .selectAll("rect")
       .data(nodes)
       .enter()
@@ -1313,9 +1472,9 @@ function day_sankeyVis(marker, checker) {
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
       .attr("fill", (d) => {
-        if (d.name === "유동인구") return "blue";
-        if (d.name === "매출") return "red";
-        return "green";
+        if (d.name === "유동인구") return "#5785af";
+        if (d.name === "매출") return "#a6507e";
+        return "#8968A2";
       })
       .style("opacity", 0)
       .transition()
@@ -1329,6 +1488,7 @@ function day_sankeyVis(marker, checker) {
       .data(nodes)
       .enter()
       .append("text")
+      .style("fill", "white")
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "0.35em")
@@ -1461,7 +1621,7 @@ d3.csv("./data/population_filtered.csv").then(function (data) {
   console.log(data);
 
   // Create a Leaflet map centered at a specific location and zoom level
-  var map = L.map("map").setView([37.556, 126.932], 14.5);
+  var map = L.map("map").setView([37.5635, 126.936], 14.5);
 
   L.tileLayer(
     "https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png",

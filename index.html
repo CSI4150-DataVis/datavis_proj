@@ -7,7 +7,7 @@
       http-equiv="Cache-Control"
       content="no-cache, no-store, must-revalidate"
     />
-    <link rel="stylesheet" href="./css/main.css?v=3.0" />
+    <link rel="stylesheet" href="./css/main.css?v=3.3" />
 
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
@@ -26,6 +26,10 @@
     <script src="https://unpkg.com/d3-path@1"></script>
     <script src="https://unpkg.com/d3-shape@1"></script>
     <script src="https://unpkg.com/d3-sankey@0"></script>
+    <link
+      href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css"
+      rel="stylesheet"
+    />
     <script>
       var sankey = d3.sankey();
     </script>
@@ -35,17 +39,24 @@
     <h1>상권 및 유동인구 시각화</h1>
     <div class="full-map">
       <div class="checkbox-map">
+        <div id="howto">
+          사용방법<br />1. 상권 선택<br />2. 유동인구 또는 매출 선택 (매출은
+          서비스 업종 선택 가능)
+        </div>
         <div class="checkbox">
-          <input
-            type="checkbox"
-            name="pop-or-rev"
-            value="pop"
-            onclick="getCheckboxValue(event)"
-          />유동인구 <input type="checkbox" name="pop-or-rev" value="rev"
-          onclick="getCheckboxValue(event)"" />매출 <input type="checkbox"
-          name="pop-or-rev" value="rev" onclick="getCheckboxValue(event)""
-          />매출 <input type="checkbox" name="sankey" value="sankey"
-          onclick="getCheckboxValue(event)"" />Sankey
+          <label for="checkboxInput" id="checkbox-label">
+            <input
+              type="checkbox"
+              name="pop-or-rev"
+              value="pop"
+              class="cb"
+              onclick="getCheckboxValue(event)"
+            />유동인구 <input type="checkbox" name="pop-or-rev" value="rev"
+            class="cb" onclick="getCheckboxValue(event)"" />매출 <input
+            type="checkbox" name="sankey" value="sankey" class="cb"
+            onclick="getCheckboxValue(event)"" />Sankey
+          </label>
+          <div id="nameBox"></div>
         </div>
         <div id="map"></div>
         <div id="map"></div>
@@ -61,6 +72,6 @@
         <div id="day-sankey-chart">요일 Sankey 차트</div>
       </div>
     </div>
-    <script src="./page/main.js?v=3.39"></script>
+    <script src="./page/main.js?v=3.40"></script>
   </body>
 </html>

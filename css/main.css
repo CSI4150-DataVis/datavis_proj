@@ -1,16 +1,54 @@
 body {
-  background-color: #d9d9d9;
+  background-color: #3e3e3e;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  font-family: "NanumSquareLight";
+  color: #ffffff;
+}
+
+h1 {
+  /* font-family: "NanumBarunGothicBold"; */
+  font-size: 50px;
+}
+
+.cb {
+  width: 20px;
+  height: 20px;
+  transform: scale(1);
+  margin-right: 15px;
+  margin-left: 40px;
+}
+
+#name {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+#select {
+  font-size: 23px;
+}
+
+#checkbox-label {
+  font-size: 23px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
 }
 
 .full-map {
   width: 1500px;
-  height: 1000px;
+  height: 950px;
   /* display: flex;
   flex-direction: row; */
+}
+
+#howto {
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .checkbox-map {
@@ -22,8 +60,13 @@ body {
 
 .checkbox {
   width: 1200px;
-  height: 100px;
+  height: 85px;
   /* border: 1px solid black; */
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 10px;
 }
 
 #map {
@@ -33,7 +76,7 @@ body {
 
 .detail-graph {
   width: 1500px;
-  height: 2000px;
+  height: 1000px;
   display: flex;
   flex-direction: column;
 }
@@ -43,6 +86,7 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 }
 
 .sankey {
@@ -50,29 +94,34 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
 }
 
 #day-graph {
   width: 650px;
   height: 380px;
+  font-size: 25px;
   /* border: 1px solid red; */
 }
 
 #time-graph {
   width: 650px;
   height: 380px;
+  font-size: 25px;
   /* border: 1px solid blue; */
 }
 
 #time-sankey-chart {
   width: 650px;
   height: 400px;
+  font-size: 25px;
   /* border: 1px solid green; */
 }
 
 #day-sankey-chart {
   width: 650px;
   height: 400px;
+  font-size: 25px;
   /* border: 1px solid blueviolet; */
 }
 
