@@ -1054,57 +1054,91 @@ function time_sankeyVis(marker, checker) {
       (d) =>
         d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
     );
+
+    var popDataFull =
+      parseInt(filteredPopData[0]["시간대_00_06_유동인구_수"]) +
+      parseInt(filteredPopData[0]["시간대_06_11_유동인구_수"]) +
+      parseInt(filteredPopData[0]["시간대_11_14_유동인구_수"]) +
+      parseInt(filteredPopData[0]["시간대_14_17_유동인구_수"]) +
+      parseInt(filteredPopData[0]["시간대_17_21_유동인구_수"]) +
+      parseInt(filteredPopData[0]["시간대_21_24_유동인구_수"]);
+    var revDataFull =
+      parseInt(filteredRevData[0]["시간대_00~06_매출_금액"]) +
+      parseInt(filteredRevData[0]["시간대_06~11_매출_금액"]) +
+      parseInt(filteredRevData[0]["시간대_11~14_매출_금액"]) +
+      parseInt(filteredRevData[0]["시간대_14~17_매출_금액"]) +
+      parseInt(filteredRevData[0]["시간대_17~21_매출_금액"]) +
+      parseInt(filteredRevData[0]["시간대_21~24_매출_금액"]);
+
     const pop_time_data = [
       {
         time: "00~06",
-        value: parseInt(filteredPopData[0]["시간대_00_06_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_00_06_유동인구_수"]) /
+          popDataFull,
       },
       {
         time: "06~11",
-        value: parseInt(filteredPopData[0]["시간대_06_11_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_06_11_유동인구_수"]) /
+          popDataFull,
       },
       {
         time: "11~14",
-        value: parseInt(filteredPopData[0]["시간대_11_14_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_11_14_유동인구_수"]) /
+          popDataFull,
       },
       {
         time: "14~17",
-        value: parseInt(filteredPopData[0]["시간대_14_17_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_14_17_유동인구_수"]) /
+          popDataFull,
       },
       {
         time: "17~21",
-        value: parseInt(filteredPopData[0]["시간대_17_21_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_17_21_유동인구_수"]) /
+          popDataFull,
       },
       {
         time: "21~24",
-        value: parseInt(filteredPopData[0]["시간대_21_24_유동인구_수"]),
+        value:
+          parseInt(filteredPopData[0]["시간대_21_24_유동인구_수"]) /
+          popDataFull,
       },
     ];
 
     const rev_time_data = [
       {
         time: "00~06",
-        value: parseInt(filteredRevData[0]["시간대_00~06_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_00~06_매출_금액"]) / revDataFull,
       },
       {
         time: "06~11",
-        value: parseInt(filteredRevData[0]["시간대_06~11_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_06~11_매출_금액"]) / revDataFull,
       },
       {
         time: "11~14",
-        value: parseInt(filteredRevData[0]["시간대_11~14_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_11~14_매출_금액"]) / revDataFull,
       },
       {
         time: "14~17",
-        value: parseInt(filteredRevData[0]["시간대_14~17_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_14~17_매출_금액"]) / revDataFull,
       },
       {
         time: "17~21",
-        value: parseInt(filteredRevData[0]["시간대_17~21_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_17~21_매출_금액"]) / revDataFull,
       },
       {
         time: "21~24",
-        value: parseInt(filteredRevData[0]["시간대_21~24_매출_금액"]) * weight,
+        value:
+          parseInt(filteredRevData[0]["시간대_21~24_매출_금액"]) / revDataFull,
       },
     ];
 
@@ -1303,46 +1337,87 @@ function day_sankeyVis(marker, checker) {
       (d) =>
         d["기준_년분기_코드"] === target_year && d["상권_코드_명"] === marker
     );
+
+    var popDataFull =
+      parseInt(filteredPopData[0]["월요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["화요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["수요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["목요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["금요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["토요일_유동인구_수"]) +
+      parseInt(filteredPopData[0]["일요일_유동인구_수"]);
+    var revDataFull =
+      parseInt(filteredRevData[0]["월요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["화요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["수요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["목요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["금요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["토요일_매출_금액"]) +
+      parseInt(filteredRevData[0]["일요일_매출_금액"]);
+
     const pop_day_data = [
-      { day: "월", value: parseInt(filteredPopData[0]["월요일_유동인구_수"]) },
-      { day: "화", value: parseInt(filteredPopData[0]["화요일_유동인구_수"]) },
-      { day: "수", value: parseInt(filteredPopData[0]["수요일_유동인구_수"]) },
-      { day: "목", value: parseInt(filteredPopData[0]["목요일_유동인구_수"]) },
-      { day: "금", value: parseInt(filteredPopData[0]["금요일_유동인구_수"]) },
-      { day: "토", value: parseInt(filteredPopData[0]["토요일_유동인구_수"]) },
-      { day: "일", value: parseInt(filteredPopData[0]["일요일_유동인구_수"]) },
+      {
+        day: "월",
+        value: parseInt(filteredPopData[0]["월요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "화",
+        value: parseInt(filteredPopData[0]["화요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "수",
+        value: parseInt(filteredPopData[0]["수요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "목",
+        value: parseInt(filteredPopData[0]["목요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "금",
+        value: parseInt(filteredPopData[0]["금요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "토",
+        value: parseInt(filteredPopData[0]["토요일_유동인구_수"]) / popDataFull,
+      },
+      {
+        day: "일",
+        value: parseInt(filteredPopData[0]["일요일_유동인구_수"]) / popDataFull,
+      },
     ];
 
     const rev_day_data = [
       {
         day: "월",
-        value: parseInt(filteredRevData[0]["월요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["월요일_매출_금액"]) / revDataFull,
       },
       {
         day: "화",
-        value: parseInt(filteredRevData[0]["화요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["화요일_매출_금액"]) / revDataFull,
       },
       {
         day: "수",
-        value: parseInt(filteredRevData[0]["수요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["수요일_매출_금액"]) / revDataFull,
       },
       {
         day: "목",
-        value: parseInt(filteredRevData[0]["목요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["목요일_매출_금액"]) / revDataFull,
       },
       {
         day: "금",
-        value: parseInt(filteredRevData[0]["금요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["금요일_매출_금액"]) / revDataFull,
       },
       {
         day: "토",
-        value: parseInt(filteredRevData[0]["토요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["토요일_매출_금액"]) / revDataFull,
       },
       {
         day: "일",
-        value: parseInt(filteredRevData[0]["일요일_매출_금액"]) * weight,
+        value: parseInt(filteredRevData[0]["일요일_매출_금액"]) / revDataFull,
       },
     ];
+    console.log(pop_day_data);
+    console.log(rev_day_data);
 
     // Create the Sankey diagram data structure
     const data = {
