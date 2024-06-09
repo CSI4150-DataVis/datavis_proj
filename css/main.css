@@ -4,7 +4,7 @@ body {
 
 .full-map {
   width: 1500px;
-  height: 1200px;
+  height: 2000px;
   display: flex;
   flex-direction: row;
 }
@@ -22,13 +22,12 @@ body {
 
 #map {
   width: 1200px;
-  height: 1060px;
-  /* border: 1px solid green; */
+  height: 1464px;
 }
 
 .detail-graph {
   width: 650px;
-  height: 1300px;
+  height: 2000px;
   display: flex;
   flex-direction: column;
 }
@@ -45,10 +44,16 @@ body {
   /* border: 1px solid blue; */
 }
 
-#sankey-chart {
+#time-sankey-chart {
   width: 650px;
   height: 400px;
   /* border: 1px solid green; */
+}
+
+#day-sankey-chart {
+  width: 650px;
+  height: 400px;
+  border: 1px solid blueviolet;
 }
 
 .line-pop {

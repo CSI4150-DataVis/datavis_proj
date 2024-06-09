@@ -940,9 +940,8 @@ function day_bothVis(marker, checker) {
 }
 
 // sankey chart
-function sankeyVis(marker, checker) {
+function time_sankeyVis(marker, checker) {
   const weight = 0.004; // weight for pop - rev
-
   // Extract the data from csv files
   Promise.all([
     d3.csv("./data/population_filtered.csv"),
@@ -1002,26 +1001,6 @@ function sankeyVis(marker, checker) {
       },
     ];
 
-    const pop_day_data = [
-      { day: "월", value: parseInt(popData[0]["월요일_유동인구_수"]) },
-      { day: "화", value: parseInt(popData[0]["화요일_유동인구_수"]) },
-      { day: "수", value: parseInt(popData[0]["수요일_유동인구_수"]) },
-      { day: "목", value: parseInt(popData[0]["목요일_유동인구_수"]) },
-      { day: "금", value: parseInt(popData[0]["금요일_유동인구_수"]) },
-      { day: "토", value: parseInt(popData[0]["토요일_유동인구_수"]) },
-      { day: "일", value: parseInt(popData[0]["일요일_유동인구_수"]) },
-    ];
-
-    const rev_day_data = [
-      { day: "월", value: parseInt(revData[0]["월요일_매출_금액"]) * weight },
-      { day: "화", value: parseInt(revData[0]["화요일_매출_금액"]) * weight },
-      { day: "수", value: parseInt(revData[0]["수요일_매출_금액"]) * weight },
-      { day: "목", value: parseInt(revData[0]["목요일_매출_금액"]) * weight },
-      { day: "금", value: parseInt(revData[0]["금요일_매출_금액"]) * weight },
-      { day: "토", value: parseInt(revData[0]["토요일_매출_금액"]) * weight },
-      { day: "일", value: parseInt(revData[0]["일요일_매출_금액"]) * weight },
-    ];
-
     // Create the Sankey diagram data structure
     const data = {
       nodes: [
@@ -1031,43 +1010,22 @@ function sankeyVis(marker, checker) {
         { name: "14~17" },
         { name: "17~21" },
         { name: "21~24" },
-        { name: "월요일" },
-        { name: "화요일" },
-        { name: "수요일" },
-        { name: "목요일" },
-        { name: "금요일" },
-        { name: "토요일" },
-        { name: "일요일" },
         { name: "유동인구" },
         { name: "매출" },
       ],
       links: [
-        { source: 13, target: 0, value: pop_time_data[0].value },
-        { source: 13, target: 1, value: pop_time_data[1].value },
-        { source: 13, target: 2, value: pop_time_data[2].value },
-        { source: 13, target: 3, value: pop_time_data[3].value },
-        { source: 13, target: 4, value: pop_time_data[4].value },
-        { source: 13, target: 5, value: pop_time_data[5].value },
-        { source: 13, target: 6, value: pop_day_data[0].value },
-        { source: 13, target: 7, value: pop_day_data[1].value },
-        { source: 13, target: 8, value: pop_day_data[2].value },
-        { source: 13, target: 9, value: pop_day_data[3].value },
-        { source: 13, target: 10, value: pop_day_data[4].value },
-        { source: 13, target: 11, value: pop_day_data[5].value },
-        { source: 13, target: 12, value: pop_day_data[6].value },
-        { source: 0, target: 14, value: rev_time_data[0].value },
-        { source: 1, target: 14, value: rev_time_data[1].value },
-        { source: 2, target: 14, value: rev_time_data[2].value },
-        { source: 3, target: 14, value: rev_time_data[3].value },
-        { source: 4, target: 14, value: rev_time_data[4].value },
-        { source: 5, target: 14, value: rev_time_data[5].value },
-        { source: 6, target: 14, value: rev_day_data[0].value },
-        { source: 7, target: 14, value: rev_day_data[1].value },
-        { source: 8, target: 14, value: rev_day_data[2].value },
-        { source: 9, target: 14, value: rev_day_data[3].value },
-        { source: 10, target: 14, value: rev_day_data[4].value },
-        { source: 11, target: 14, value: rev_day_data[5].value },
-        { source: 12, target: 14, value: rev_day_data[6].value },
+        { source: 6, target: 0, value: pop_time_data[0].value },
+        { source: 6, target: 1, value: pop_time_data[1].value },
+        { source: 6, target: 2, value: pop_time_data[2].value },
+        { source: 6, target: 3, value: pop_time_data[3].value },
+        { source: 6, target: 4, value: pop_time_data[4].value },
+        { source: 6, target: 5, value: pop_time_data[5].value },
+        { source: 0, target: 7, value: rev_time_data[0].value },
+        { source: 1, target: 7, value: rev_time_data[1].value },
+        { source: 2, target: 7, value: rev_time_data[2].value },
+        { source: 3, target: 7, value: rev_time_data[3].value },
+        { source: 4, target: 7, value: rev_time_data[4].value },
+        { source: 5, target: 7, value: rev_time_data[5].value },
       ],
     };
 
@@ -1077,7 +1035,7 @@ function sankeyVis(marker, checker) {
 
     // Create the SVG container
     const svg = d3
-      .select("#sankey-chart")
+      .select("#time-sankey-chart")
       .append("svg")
       .attr("width", width + offset)
       .attr("height", height);
@@ -1107,7 +1065,7 @@ function sankeyVis(marker, checker) {
       } else if (node.name === "매출") {
         node.x0 = width - 15;
         node.x1 = width;
-      } else if (node.name.includes("요일") || node.name.includes("~")) {
+      } else if (node.name.includes("~")) {
         node.x0 = (width - 15) / 2;
         node.x1 = (width + 15) / 2;
       }
@@ -1122,9 +1080,31 @@ function sankeyVis(marker, checker) {
       .selectAll("path")
       .data(links)
       .enter()
+      .append("g");
+
+    // Add border path
+    link
+      .append("path")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke-width", (d) => Math.max(1, d.width + 2)) // Add border width
+      .attr("stroke", "gray") // Border color
+      .attr("stroke-opacity", 0.5)
+      .attr("stroke-dasharray", function (d) {
+        return this.getTotalLength();
+      })
+      .attr("stroke-dashoffset", function (d) {
+        return this.getTotalLength();
+      })
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0);
+
+    link
       .append("path")
       .attr("d", d3.sankeyLinkHorizontal())
       .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", (d) => d.width / 50) // Adjust opacity based on width
+      .attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
       .attr("stroke-dasharray", function (d) {
         return this.getTotalLength();
       })
@@ -1159,7 +1139,192 @@ function sankeyVis(marker, checker) {
 
     // Add text labels to the nodes with animation
     g.append("g")
-      .style("font", "10px sans-serif")
+      .style("font", "16px sans-serif")
+      .selectAll("text")
+      .data(nodes)
+      .enter()
+      .append("text")
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", (d) => (d.y1 + d.y0) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .text((d) => d.name)
+      .style("opacity", 0)
+      .transition()
+      .delay(1000)
+      .duration(1000)
+      .style("opacity", 1);
+  });
+}
+
+function day_sankeyVis(marker, checker) {
+  const weight = 0.004; // weight for pop - rev
+
+  // Extract the data from csv files
+  Promise.all([
+    d3.csv("./data/population_filtered.csv"),
+    d3.csv("./data/revenue_filtered.csv"),
+  ]).then(function ([popData, revData]) {
+    const pop_day_data = [
+      { day: "월", value: parseInt(popData[0]["월요일_유동인구_수"]) },
+      { day: "화", value: parseInt(popData[0]["화요일_유동인구_수"]) },
+      { day: "수", value: parseInt(popData[0]["수요일_유동인구_수"]) },
+      { day: "목", value: parseInt(popData[0]["목요일_유동인구_수"]) },
+      { day: "금", value: parseInt(popData[0]["금요일_유동인구_수"]) },
+      { day: "토", value: parseInt(popData[0]["토요일_유동인구_수"]) },
+      { day: "일", value: parseInt(popData[0]["일요일_유동인구_수"]) },
+    ];
+
+    const rev_day_data = [
+      { day: "월", value: parseInt(revData[0]["월요일_매출_금액"]) * weight },
+      { day: "화", value: parseInt(revData[0]["화요일_매출_금액"]) * weight },
+      { day: "수", value: parseInt(revData[0]["수요일_매출_금액"]) * weight },
+      { day: "목", value: parseInt(revData[0]["목요일_매출_금액"]) * weight },
+      { day: "금", value: parseInt(revData[0]["금요일_매출_금액"]) * weight },
+      { day: "토", value: parseInt(revData[0]["토요일_매출_금액"]) * weight },
+      { day: "일", value: parseInt(revData[0]["일요일_매출_금액"]) * weight },
+    ];
+
+    // Create the Sankey diagram data structure
+    const data = {
+      nodes: [
+        { name: "월" },
+        { name: "화" },
+        { name: "수" },
+        { name: "목" },
+        { name: "금" },
+        { name: "토" },
+        { name: "일" },
+        { name: "유동인구" },
+        { name: "매출" },
+      ],
+      links: [
+        { source: 7, target: 0, value: pop_day_data[0].value },
+        { source: 7, target: 1, value: pop_day_data[1].value },
+        { source: 7, target: 2, value: pop_day_data[2].value },
+        { source: 7, target: 3, value: pop_day_data[3].value },
+        { source: 7, target: 4, value: pop_day_data[4].value },
+        { source: 7, target: 5, value: pop_day_data[5].value },
+        { source: 7, target: 6, value: pop_day_data[6].value },
+        { source: 0, target: 8, value: rev_day_data[0].value },
+        { source: 1, target: 8, value: rev_day_data[1].value },
+        { source: 2, target: 8, value: rev_day_data[2].value },
+        { source: 3, target: 8, value: rev_day_data[3].value },
+        { source: 4, target: 8, value: rev_day_data[4].value },
+        { source: 5, target: 8, value: rev_day_data[5].value },
+        { source: 6, target: 8, value: rev_day_data[6].value },
+      ],
+    };
+
+    const width = 600;
+    const height = 380;
+    const offset = 25;
+
+    // Create the SVG container
+    const svg = d3
+      .select("#day-sankey-chart")
+      .append("svg")
+      .attr("width", width + offset)
+      .attr("height", height);
+
+    const g = svg.append("g").attr("transform", `translate(${offset},0)`);
+
+    // Define the Sankey diagram properties
+    const sankey = d3
+      .sankey()
+      .nodeWidth(15)
+      .nodePadding(10)
+      .extent([
+        [1, 1],
+        [width - 1, height - 6],
+      ]);
+
+    const { nodes, links } = sankey({
+      nodes: data.nodes.map((d) => Object.assign({}, d)),
+      links: data.links.map((d) => Object.assign({}, d)),
+    });
+
+    // Manually set node positions
+    nodes.forEach((node) => {
+      if (node.name === "유동인구") {
+        node.x0 = 0;
+        node.x1 = 15;
+      } else if (node.name === "매출") {
+        node.x0 = width - 15;
+        node.x1 = width;
+      } else {
+        node.x0 = (width - 15) / 2;
+        node.x1 = (width + 15) / 2;
+      }
+    });
+
+    // Create the Sankey links with animation
+    const link = g
+      .append("g")
+      .attr("fill", "none")
+      .selectAll("path")
+      .data(links)
+      .enter()
+      .append("g");
+
+    // Add border path
+    link
+      .append("path")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke-width", (d) => Math.max(1, d.width + 2)) // Add border width
+      .attr("stroke", "gray") // Border color
+      .attr("stroke-opacity", 0.5)
+      .attr("stroke-dasharray", function (d) {
+        return this.getTotalLength();
+      })
+      .attr("stroke-dashoffset", function (d) {
+        return this.getTotalLength();
+      })
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0);
+
+    link
+      .append("path")
+      .attr("d", d3.sankeyLinkHorizontal())
+      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", (d) => d.width / 50) // Adjust opacity based on width
+      .attr("stroke", (d) => `rgba(0, 250, 0, ${d.width / 70})`) // Adjust color intensity based on width
+      .attr("stroke-dasharray", function (d) {
+        return this.getTotalLength();
+      })
+      .attr("stroke-dashoffset", function (d) {
+        return this.getTotalLength();
+      })
+      .transition()
+      .duration(1000)
+      .attr("stroke-dashoffset", 0);
+
+    // Create the Sankey nodes with animation
+    const node = g
+      .append("g")
+      .attr("stroke", "#000")
+      .selectAll("rect")
+      .data(nodes)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => {
+        if (d.name === "유동인구") return "blue";
+        if (d.name === "매출") return "red";
+        return "green";
+      })
+      .style("opacity", 0)
+      .transition()
+      .duration(1000)
+      .style("opacity", 1);
+
+    // Add text labels to the nodes with animation
+    g.append("g")
+      .style("font", "16px sans-serif")
       .selectAll("text")
       .data(nodes)
       .enter()
@@ -1181,7 +1346,8 @@ function getVisualization(marker, checker) {
   // Remove all existing elements
   d3.select("#time-graph").selectAll("*").remove();
   d3.select("#day-graph").selectAll("*").remove();
-  d3.select("#sankey-chart").selectAll("*").remove();
+  d3.select("#time-sankey-chart").selectAll("*").remove();
+  d3.select("#day-sankey-chart").selectAll("*").remove();
 
   if (checker === "pop") {
     time_popVis(marker, checker);
@@ -1193,19 +1359,23 @@ function getVisualization(marker, checker) {
     time_bothVis(marker, checker);
     day_bothVis(marker, checker);
   } else if (checker === "sankey") {
-    sankeyVis(marker, checker);
+    time_sankeyVis(marker, checker);
+    day_sankeyVis(marker, checker);
   } else if (checker === "pop_sankey") {
     time_popVis(marker, checker);
     day_popVis(marker, checker);
-    sankeyVis(marker, checker);
+    time_sankeyVis(marker, checker);
+    day_sankeyVis(marker, checker);
   } else if (checker === "rev_sankey") {
     time_revVis(marker, checker);
     day_revVis(marker, checker);
-    sankeyVis(marker, checker);
+    time_sankeyVis(marker, checker);
+    day_sankeyVis(marker, checker);
   } else if (checker === "all") {
     time_bothVis(marker, checker);
     day_bothVis(marker, checker);
-    sankeyVis(marker, checker);
+    time_sankeyVis(marker, checker);
+    day_sankeyVis(marker, checker);
   }
 }
 
