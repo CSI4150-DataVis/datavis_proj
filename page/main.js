@@ -148,19 +148,14 @@ function makeSelectBox(items) {
   var select = document.createElement("select");
   select.id = "select";
 
-  // Iterate through the list of items
   items.forEach(function (item) {
-    // Create an option element
     var option = document.createElement("option");
     option.value = item;
     option.textContent = item;
 
-    // Append the option element to the select element
     select.appendChild(option);
   });
 
-  // Append the select element to the container
-  //container.appendChild(select);
   return select;
 }
 
@@ -1225,23 +1220,6 @@ function time_sankeyVis(marker, checker) {
       .enter()
       .append("g");
 
-    // // Create gradient definition
-    // const defs = svg.append("defs");
-
-    // // Define gradient
-    // const gradient = defs
-    //   .append("linearGradient")
-    //   .attr("id", "linkGradient")
-    //   .attr("gradientUnits", "userSpaceOnUse")
-    //   .attr("x1", "0%")
-    //   .attr("y1", "0%")
-    //   .attr("x2", "100%")
-    //   .attr("y2", "0%");
-
-    // gradient.append("stop").attr("offset", "50%").attr("stop-color", "purple");
-
-    // gradient.append("stop").attr("offset", "100%").attr("stop-color", "red");
-
     // Add border path
     link
       .append("path")
@@ -1637,65 +1615,11 @@ function getRegionData(feature, layer) {
   }
 }
 
-// function onEachFeature(feature, layer) {
-//   layer.on({
-//     mouseover: highlightFeature,
-//     mouseout: resetHighlight,
-//     click: getRegionData(feature, layer),
-//   });
-// }
+// d3.csv("./data/revenue_filtered.csv").then(function (data) {
 
-d3.csv("./data/revenue_filtered.csv").then(function (data) {
-  console.log(data);
-
-  // d3.json("../data/map.geojson")
-  //   .then((geojson) => {
-  //     var bbox = d3.select("#map").node().getBoundingClientRect();
-  //     var w = 1200;
-  //     var h = 1060;
-  //     //var svg = d3.select("#map").append("svg").attr("width", w).attr("height", h);
-
-  //     // var projection = d3
-  //     //   .geoMercator()
-  //     //   .scale(100)
-  //     //   .translate([w / 2, h / 2]);
-  //     var projection = d3.geoEqualEarth();
-  //     projection.fitExtent(
-  //       [
-  //         [20, 20],
-  //         [w, h],
-  //       ],
-  //       geojson
-  //     );
-  //     var geoGenerator = d3.geoPath().projection(projection);
-  //     var svg = d3
-  //       .select("#map")
-  //       .append("svg")
-  //       .style("width", "100%")
-  //       .style("height", "100%");
-
-  //     //var path = d3.geoPath().projection(projection);
-
-  //     console.log(geojson);
-  //     console.log(geojson.features);
-  //     svg
-  //       .selectAll("path")
-  //       .data(geojson.features)
-  //       .enter()
-  //       .append("path")
-  //       .attr("class", "land")
-  //       .attr("d", geoGenerator);
-  //     //.attr("d", path);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error loading the GeoJSON data: ", error);
-  //   });
-});
+// });
 
 d3.csv("./data/population_filtered.csv").then(function (data) {
-  console.log(data);
-
-  // Create a Leaflet map centered at a specific location and zoom level
   var map = L.map("map").setView([37.5635, 126.936], 14.5);
 
   L.tileLayer(
@@ -1707,14 +1631,6 @@ d3.csv("./data/population_filtered.csv").then(function (data) {
     }
   ).addTo(map);
 
-  // Add a tile layer from OpenStreetMap
-  // L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  //   maxZoom: 19,
-  //   attribution:
-  //     'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-  // }).addTo(map);
-
-  // Load GeoJSON data and add it to the map
   fetch("./data/map.geojson")
     .then((response) => response.json())
     .then((data) => {
@@ -1723,16 +1639,13 @@ d3.csv("./data/population_filtered.csv").then(function (data) {
           layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
-            //click: getRegionData(feature, layer),
           });
         },
       }).addTo(map);
       var regions = document.getElementsByClassName("leaflet-interactive");
       for (var i = 0; i < regions.length; i++) {
         regions[i].innerHTML = regionList[i];
-        //console.log(regions[i]);
         regions[i].addEventListener("click", (e) => {
-          //console.log(e.target);
           getMarkerValue(e);
         });
       }
@@ -1749,8 +1662,6 @@ fetch("../data/marker.json")
   })
   .then((data) => {
     markerArray = data;
-    // console.log(markerArray);
-    // getMarkerValue();
   })
   .catch((error) => {
     console.error("There was a problem with the fetch operation:", error);
